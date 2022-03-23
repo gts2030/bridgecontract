@@ -10,18 +10,18 @@ describe("AssetToken", () => {
     let assetToken: AssetToken;
 
     const provider = waffle.provider;
-    const [admin] = provider.getWallets()
+    const [admin] = provider.getWallets() // admin이라는 지갑을 설정 (최대 10개까지 가능), address, private key, mnemonic등의 속성으 가지고 있음
 
     beforeEach(async () => {
         assetToken = await deployContract(
-            admin,
-            AssetTokenArtifact,
+            admin, // deploy하는 트랜잭션을 전송하는 account
+            AssetTokenArtifact, // bytecode artifact
             [
                 10000,
                 "FirstAssetToken",
                 "FAT"
-            ]
-        ) as AssetToken;
+            ] // constructor 인자
+        ) as AssetToken; // typechain으로 생성된 컨트랙트 인스턴스 타입
     })
 
     context('new AssetToken', async () => {
