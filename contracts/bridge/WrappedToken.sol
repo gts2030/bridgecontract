@@ -4,7 +4,7 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract WrappedToken is ERC20 {
-	uint256 MAX_UINT = 2**256 - 1;
+	uint256 MAX_UINT = 2**4 - 1; // TODO : 나중에 2**256-1로 해야함
 	uint256 private chainId; // TODO : chainid의 uint크기 확인하여 적용하기 
 	string private originAddress;
 	uint8 private originDecimals;
@@ -23,6 +23,18 @@ contract WrappedToken is ERC20 {
 	// operation it's a lot of complextiy to add so we chose to forgoe it.
 	function totalSupply() public view virtual override returns (uint256) {
 		return MAX_UINT - balanceOf(factoryAddress);
+	}
+
+	function getOrigin() public view returns (uint256, string memory) {
+		return (chainId, originAddress);
+	}
+
+	function getChainId() public view returns (uint256) {
+		return chainId;
+	}
+
+	function getOriginAddr() public view returns (string memory) {
+		return originAddress;
 	}
 
 	constructor(

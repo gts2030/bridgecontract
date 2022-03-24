@@ -25,6 +25,7 @@ export interface BridgeFactoryInterface extends utils.Interface {
     "deployToken(uint256,string,string,string,uint8)": FunctionFragment;
     "getCreationBytecode(uint256,string,string,string,uint8)": FunctionFragment;
     "getToken(uint256,string)": FunctionFragment;
+    "owner()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -47,6 +48,7 @@ export interface BridgeFactoryInterface extends utils.Interface {
     functionFragment: "getToken",
     values: [BigNumberish, string]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "allTokens", data: BytesLike): Result;
   decodeFunctionResult(
@@ -62,6 +64,7 @@ export interface BridgeFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getToken", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
 
   events: {
     "ERC20DeployedEvent(address,uint256,string,string,string,uint8)": EventFragment;
@@ -140,6 +143,8 @@ export interface BridgeFactory extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
   };
 
   allTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -170,6 +175,8 @@ export interface BridgeFactory extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     allTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -198,6 +205,8 @@ export interface BridgeFactory extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -250,6 +259,8 @@ export interface BridgeFactory extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -283,5 +294,7 @@ export interface BridgeFactory extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -1,9 +1,11 @@
 pragma solidity 0.8.13;
 
+import "hardhat/console.sol";
 import "../interfaces/IBridgeFactory.sol";
 import "./WrappedToken.sol";
 
 contract BridgeFactory is IBridgeFactory {
+    address public owner;
     mapping(uint256 => mapping(string => address)) public getToken;
     address[] public allTokens;
 
@@ -16,6 +18,10 @@ contract BridgeFactory is IBridgeFactory {
 		uint8 _decimals
 	);
 
+    constructor() {
+		owner = msg.sender;
+	}
+
     function getCreationBytecode(uint256 _chainId, string memory _originAddress, 
     string memory _name, string memory _symbol,	uint8 _decimals) public pure returns (bytes memory) {
         bytes memory bytecode = type(WrappedToken).creationCode;
@@ -27,6 +33,7 @@ contract BridgeFactory is IBridgeFactory {
         external
         returns (address token)
     {   
+        // 토큰 최초 생성하는 주체를 유져로 그냥 둘것인가 아니면 제한할 것인가
         // require(msg.sender == migrator);
         require(
             getToken[_chainId][_originAddress] == address(0),
@@ -45,6 +52,8 @@ contract BridgeFactory is IBridgeFactory {
         getToken[_chainId][_originAddress] = token;
         allTokens.push(token);
         emit ERC20DeployedEvent(token, _chainId, _originAddress, _name, _symbol, _decimals);
+        console.log(token);
+        return token;
     }
 
     function allTokensLength() external view returns (uint256) {

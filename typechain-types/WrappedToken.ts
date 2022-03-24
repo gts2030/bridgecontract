@@ -25,6 +25,9 @@ export interface WrappedTokenInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "getChainId()": FunctionFragment;
+    "getOrigin()": FunctionFragment;
+    "getOriginAddr()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -46,6 +49,15 @@ export interface WrappedTokenInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getChainId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "getOrigin", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getOriginAddr",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -72,6 +84,12 @@ export interface WrappedTokenInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getChainId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getOrigin", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getOriginAddr",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -163,6 +181,12 @@ export interface WrappedToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getChainId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getOrigin(overrides?: CallOverrides): Promise<[BigNumber, string]>;
+
+    getOriginAddr(overrides?: CallOverrides): Promise<[string]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -211,6 +235,12 @@ export interface WrappedToken extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getChainId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getOrigin(overrides?: CallOverrides): Promise<[BigNumber, string]>;
+
+  getOriginAddr(overrides?: CallOverrides): Promise<string>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -258,6 +288,12 @@ export interface WrappedToken extends BaseContract {
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    getChainId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getOrigin(overrides?: CallOverrides): Promise<[BigNumber, string]>;
+
+    getOriginAddr(overrides?: CallOverrides): Promise<string>;
 
     increaseAllowance(
       spender: string,
@@ -332,6 +368,12 @@ export interface WrappedToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getChainId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getOrigin(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getOriginAddr(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -383,6 +425,12 @@ export interface WrappedToken extends BaseContract {
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    getChainId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getOrigin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getOriginAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
