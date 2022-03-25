@@ -1,8 +1,9 @@
+//SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
 interface IBridgeFactory {
 
-    // function migrator() external view returns (address);
+    function migrator() external view returns (address);
 
     function allTokens(uint256) external view returns (address token);
 
@@ -12,5 +13,9 @@ interface IBridgeFactory {
         external
         returns (address token);
 
-    // function setMigrator(address) external;
+    function migrate(address) external;
+
+    function copy(address _addr, uint256 _chainID, string calldata _originAddress) external;
+
+    function changeMigrator(address) external;
 }

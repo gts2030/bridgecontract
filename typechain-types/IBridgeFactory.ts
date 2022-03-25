@@ -22,7 +22,11 @@ export interface IBridgeFactoryInterface extends utils.Interface {
   functions: {
     "allTokens(uint256)": FunctionFragment;
     "allTokensLength()": FunctionFragment;
+    "changeMigrator(address)": FunctionFragment;
+    "copy(address,uint256,string)": FunctionFragment;
     "deployToken(uint256,string,string,string,uint8)": FunctionFragment;
+    "migrate(address)": FunctionFragment;
+    "migrator()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -34,9 +38,19 @@ export interface IBridgeFactoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "changeMigrator",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "copy",
+    values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "deployToken",
     values: [BigNumberish, string, string, string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "migrate", values: [string]): string;
+  encodeFunctionData(functionFragment: "migrator", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "allTokens", data: BytesLike): Result;
   decodeFunctionResult(
@@ -44,9 +58,16 @@ export interface IBridgeFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "changeMigrator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "copy", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "deployToken",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "migrate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "migrator", data: BytesLike): Result;
 
   events: {};
 }
@@ -86,6 +107,18 @@ export interface IBridgeFactory extends BaseContract {
 
     allTokensLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    changeMigrator(
+      arg0: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    copy(
+      _addr: string,
+      _chainID: BigNumberish,
+      _originAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     deployToken(
       _chainId: BigNumberish,
       _originAddress: string,
@@ -94,11 +127,30 @@ export interface IBridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    migrate(
+      arg0: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    migrator(overrides?: CallOverrides): Promise<[string]>;
   };
 
   allTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   allTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+  changeMigrator(
+    arg0: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  copy(
+    _addr: string,
+    _chainID: BigNumberish,
+    _originAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   deployToken(
     _chainId: BigNumberish,
@@ -109,10 +161,26 @@ export interface IBridgeFactory extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  migrate(
+    arg0: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  migrator(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     allTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     allTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+    changeMigrator(arg0: string, overrides?: CallOverrides): Promise<void>;
+
+    copy(
+      _addr: string,
+      _chainID: BigNumberish,
+      _originAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     deployToken(
       _chainId: BigNumberish,
@@ -122,6 +190,10 @@ export interface IBridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    migrate(arg0: string, overrides?: CallOverrides): Promise<void>;
+
+    migrator(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -134,6 +206,18 @@ export interface IBridgeFactory extends BaseContract {
 
     allTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
 
+    changeMigrator(
+      arg0: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    copy(
+      _addr: string,
+      _chainID: BigNumberish,
+      _originAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     deployToken(
       _chainId: BigNumberish,
       _originAddress: string,
@@ -142,6 +226,13 @@ export interface IBridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    migrate(
+      arg0: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    migrator(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -152,6 +243,18 @@ export interface IBridgeFactory extends BaseContract {
 
     allTokensLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    changeMigrator(
+      arg0: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    copy(
+      _addr: string,
+      _chainID: BigNumberish,
+      _originAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     deployToken(
       _chainId: BigNumberish,
       _originAddress: string,
@@ -160,5 +263,12 @@ export interface IBridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    migrate(
+      arg0: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    migrator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

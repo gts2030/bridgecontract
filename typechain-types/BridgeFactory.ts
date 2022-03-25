@@ -22,10 +22,15 @@ export interface BridgeFactoryInterface extends utils.Interface {
   functions: {
     "allTokens(uint256)": FunctionFragment;
     "allTokensLength()": FunctionFragment;
+    "changeMigrator(address)": FunctionFragment;
+    "copy(address,uint256,string)": FunctionFragment;
     "deployToken(uint256,string,string,string,uint8)": FunctionFragment;
+    "formerFactory()": FunctionFragment;
     "getCreationBytecode(uint256,string,string,string,uint8)": FunctionFragment;
     "getToken(uint256,string)": FunctionFragment;
-    "owner()": FunctionFragment;
+    "migrate(address)": FunctionFragment;
+    "migrator()": FunctionFragment;
+    "setFactory(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -37,8 +42,20 @@ export interface BridgeFactoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "changeMigrator",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "copy",
+    values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "deployToken",
     values: [BigNumberish, string, string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "formerFactory",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getCreationBytecode",
@@ -48,7 +65,9 @@ export interface BridgeFactoryInterface extends utils.Interface {
     functionFragment: "getToken",
     values: [BigNumberish, string]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "migrate", values: [string]): string;
+  encodeFunctionData(functionFragment: "migrator", values?: undefined): string;
+  encodeFunctionData(functionFragment: "setFactory", values: [string]): string;
 
   decodeFunctionResult(functionFragment: "allTokens", data: BytesLike): Result;
   decodeFunctionResult(
@@ -56,7 +75,16 @@ export interface BridgeFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "changeMigrator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "copy", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "deployToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "formerFactory",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -64,7 +92,9 @@ export interface BridgeFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getToken", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "migrate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "migrator", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setFactory", data: BytesLike): Result;
 
   events: {
     "ERC20DeployedEvent(address,uint256,string,string,string,uint8)": EventFragment;
@@ -120,6 +150,18 @@ export interface BridgeFactory extends BaseContract {
 
     allTokensLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    changeMigrator(
+      _migrator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    copy(
+      _addr: string,
+      _chainId: BigNumberish,
+      _originAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     deployToken(
       _chainId: BigNumberish,
       _originAddress: string,
@@ -128,6 +170,8 @@ export interface BridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    formerFactory(overrides?: CallOverrides): Promise<[string]>;
 
     getCreationBytecode(
       _chainId: BigNumberish,
@@ -144,12 +188,34 @@ export interface BridgeFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
+    migrate(
+      _toAddr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    migrator(overrides?: CallOverrides): Promise<[string]>;
+
+    setFactory(
+      _formerFactory: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   allTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   allTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+  changeMigrator(
+    _migrator: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  copy(
+    _addr: string,
+    _chainId: BigNumberish,
+    _originAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   deployToken(
     _chainId: BigNumberish,
@@ -159,6 +225,8 @@ export interface BridgeFactory extends BaseContract {
     _decimals: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  formerFactory(overrides?: CallOverrides): Promise<string>;
 
   getCreationBytecode(
     _chainId: BigNumberish,
@@ -175,12 +243,31 @@ export interface BridgeFactory extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  owner(overrides?: CallOverrides): Promise<string>;
+  migrate(
+    _toAddr: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  migrator(overrides?: CallOverrides): Promise<string>;
+
+  setFactory(
+    _formerFactory: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     allTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     allTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
+
+    changeMigrator(_migrator: string, overrides?: CallOverrides): Promise<void>;
+
+    copy(
+      _addr: string,
+      _chainId: BigNumberish,
+      _originAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     deployToken(
       _chainId: BigNumberish,
@@ -190,6 +277,8 @@ export interface BridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    formerFactory(overrides?: CallOverrides): Promise<string>;
 
     getCreationBytecode(
       _chainId: BigNumberish,
@@ -206,7 +295,14 @@ export interface BridgeFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    owner(overrides?: CallOverrides): Promise<string>;
+    migrate(_toAddr: string, overrides?: CallOverrides): Promise<void>;
+
+    migrator(overrides?: CallOverrides): Promise<string>;
+
+    setFactory(
+      _formerFactory: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -236,6 +332,18 @@ export interface BridgeFactory extends BaseContract {
 
     allTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
 
+    changeMigrator(
+      _migrator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    copy(
+      _addr: string,
+      _chainId: BigNumberish,
+      _originAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     deployToken(
       _chainId: BigNumberish,
       _originAddress: string,
@@ -244,6 +352,8 @@ export interface BridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    formerFactory(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCreationBytecode(
       _chainId: BigNumberish,
@@ -260,7 +370,17 @@ export interface BridgeFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
+    migrate(
+      _toAddr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    migrator(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setFactory(
+      _formerFactory: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -271,6 +391,18 @@ export interface BridgeFactory extends BaseContract {
 
     allTokensLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    changeMigrator(
+      _migrator: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    copy(
+      _addr: string,
+      _chainId: BigNumberish,
+      _originAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     deployToken(
       _chainId: BigNumberish,
       _originAddress: string,
@@ -279,6 +411,8 @@ export interface BridgeFactory extends BaseContract {
       _decimals: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    formerFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getCreationBytecode(
       _chainId: BigNumberish,
@@ -295,6 +429,16 @@ export interface BridgeFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    migrate(
+      _toAddr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    migrator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setFactory(
+      _formerFactory: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }
